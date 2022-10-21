@@ -48,8 +48,32 @@ app.post(
 
         // If the decryption failed, submission will be `null`.
         if (submission) {
+            const nodemailer = require('nodemailer');
+            const msg = {
+                from: "nikkiyongkf@gmail.com",
+                to: "nikkiyong@outlook.com",
+                subject: "Nodemailer Testing",
+                text: "Testing" + JSON.stringify(submission)
+            }
+            const transporter = nodemailer.createTransport({
+                service: "gmail",
+                auth: {
+                    user: "nikkiyongkf@gmail.com",
+                    pass: "lhlkykbactdagjme"
+                },
+                port: 465,
+                host: 'smtp.gmail.com'
+            })
+                .sendMail(msg, (err) => {
+                    if (err) {
+                        return console.log('Error occurs', err);
+                    } else {
+                        return console.log('Email sent!');
+                    }
+                })
+
             console.log('This is submission' + JSON.stringify(submission))
-            return res.status(200).send({ message: 'See console for submission' })
+            return res.status(200).send({ message: 'See console for submission!' })
             // Continue processing the submission
         } else {
             // console.log('This is submission' + JSON.stringify(submission))
@@ -58,3 +82,5 @@ app.post(
         }
     }
 )
+
+

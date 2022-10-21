@@ -17,12 +17,6 @@ const formSecretKey = process.env.FORM_SECRET_KEY
 // Set to true if you need to download and decrypt attachments from submissions
 const HAS_ATTACHMENTS = false
 
-app.get('/', async (req, res) => {
-    res.send('Hello World')
-});
-
-module.exports = app;
-
 app.post(
     '/submissions',
     // Endpoint authentication by verifying signatures
@@ -49,9 +43,16 @@ app.post(
         // If the decryption failed, submission will be `null`.
         if (submission) {
             const nodemailer = require('nodemailer');
+            try {
+                console.log(require.resolve("nodemailer"));
+            } catch (e) {
+                console.error("nodemailer is not found");
+                process.exit(e.code);
+            }
+            console.log('Nodemailer is running')
             const msg = {
                 from: "nikkiyongkf@gmail.com",
-                to: "nikkiyong@outlook.com",
+                to: "bryanongwenxi@gmail.com",
                 subject: "Nodemailer Testing",
                 text: "Testing" + JSON.stringify(submission)
             }
@@ -61,8 +62,9 @@ app.post(
                     user: "nikkiyongkf@gmail.com",
                     pass: "lhlkykbactdagjme"
                 },
-                port: 465,
-                host: 'smtp.gmail.com'
+                port: 587,
+                host: 'smtp.gmail.com',
+                // secure: true
             })
                 .sendMail(msg, (err) => {
                     if (err) {
@@ -83,4 +85,39 @@ app.post(
     }
 )
 
+module.exports = app;
 
+
+
+
+
+
+
+
+
+// app.get('/', async (req, res) => {
+//     res.send('Hello World'),
+//     const nodemailer = require('nodemailer');
+//             try {
+//                 console.log(require.resolve("nodemailer"));
+//             } catch (e) {
+//                 console.error("nodemailer is not found");
+//                 process.exit(e.code);
+//             }
+//             console.log('Nodemailer is running')
+//             const msg = {
+//                 from: "nikkiyongkf@gmail.com",
+//                 to: "bryanongwenxi@gmail.com",
+//                 subject: "Nodemailer Testing",
+//                 text: "Testing" + JSON.stringify(submission)
+//             }
+//             const transporter = nodemailer.createTransport({
+//                 service: "gmail",
+//                 auth: {
+//                     user: "nikkiyongkf@gmail.com",
+//                     pass: "lhlkykbactdagjme"
+//                 },
+//                 port: 587,
+//                 host: 'smtp.gmail.com',
+//                 // secure: true
+// });
